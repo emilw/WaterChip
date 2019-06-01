@@ -1,0 +1,15 @@
+{
+  "name": "waterchip",
+  "version": "1.0.0",
+  "description": "A watering system for the garden",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chip-gpio": "^1.1.3",
+    "mqtt": "^3.0.0"
+  }
+}

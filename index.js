@@ -1,7 +1,7 @@
 
 var mqtt = require('mqtt')
 var client  = mqtt.connect('mqtt://mqtt')
-var Gpio = require('chip-gpio').Gpio;
+const Gpio = require('onoff').Gpio;
 
 function watering(fake){
     if(fake){
@@ -10,10 +10,10 @@ function watering(fake){
             console.log("Watering is turned of");
         },5000)
     } else{
-        var led = new Gpio(120, 'out');
+        const led = new Gpio(120, 'out');
         led.write(1);
         setTimeout(function(){
-            led.write(0);
+            led.writeSync(0);
             led.unexport();
         },5000)
     }

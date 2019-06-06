@@ -4,6 +4,7 @@ var client  = mqtt.connect('mqtt://mqtt')
 const Gpio = require('onoff').Gpio;
 
 function turnOn(fake){
+    statusUpdate('Turning on...');
     if(fake){
         console.log("FAKE - Water is turned on");
     } else {
@@ -11,6 +12,8 @@ function turnOn(fake){
         led.writeSync(1)
         led.unexport();
     }
+
+    statusUpdate('Done turning on');
 
     /*
     Safety timeout when to close down the watering if no one turns it off
@@ -21,6 +24,7 @@ function turnOn(fake){
 }
 
 function turnOff(fake){
+    statusUpdate('Turning off...');
     if(fake){
         console.log("FAKE - Water is turned off");
     } else {
@@ -28,6 +32,7 @@ function turnOff(fake){
         led.writeSync(0);
         led.unexport();
     }
+    statusUpdate('Done turning off');
 }
 
 function watering(fake, state){
@@ -38,17 +43,22 @@ function watering(fake, state){
     }
 }
 
+function statusUpdate(message){
+    console.log(message);
+    client.publish('watering/statustext', message)
+}
+
 client.on('connect', function () {
-  client.subscribe('watering', function (err) {
+  client.subscribe('watering/command', function (err) {
     if (!err) {
-      client.publish('watering', 'Hello mqtt')
+        statusUpdate('Connected and await command(1 or 0)');
     }
   })
 })
  
 client.on('message', function (topic, message) {
   // message is Buffer
-  console.log(message.toString())
+  statusUpdate('Recieved:' + message);
 
   watering(1, message.toString());
   //client.end()
